@@ -279,3 +279,6 @@ class PlanView:
             self._precalculation[i] = (pos, coord[0], coord[1], tang)
         # end = time.time()
         # self.cache_time += end - start
+    @property
+    def get_geometries(self):
+        return self._geometries
