@@ -147,6 +147,7 @@ class PlanView:
 
         return self._geo_lengths[-1]
 
+    
     def calc(self, s_pos: float) -> Tuple[np.ndarray, float]:
         """Calculate position and tangent at s_pos.
 

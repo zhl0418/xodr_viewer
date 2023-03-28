@@ -20,13 +20,14 @@ class XodrViewer:
     def show_geometry(self):
         self.draw_geometry()
         self.show()
+        
     def draw_lane(self):
         for road in self.xodr.roads:
             for lanesection in road.lanes.lane_sections: 
                 for lane in lanesection.leftLanes:
                     print(lane.id)
                     
-    def draw_geometry(self):
+    def draw_geometry_color(self):
         for road in self.xodr.roads:
             for geometry in road.planView.get_geometries:
                 if isinstance(geometry, elements.geometry.Line):
@@ -39,6 +40,17 @@ class XodrViewer:
                     self._draw_param_poly3(geometry)
                 elif isinstance(geometry, elements.geometry.Poly3):
                     self._draw_poly3(geometry)
+
+    def draw_geometry(self):
+        for road in self.xodr.roads:
+            _x = []
+            _y = []
+            for s in np.linspace(0,road.planView.length,100):
+                pos,_ = road.planView.calc(s)
+                _x.append(pos[0])
+                _y.append(pos[1])
+            self.ax.plot(_x, _y, color="#98b574")
+                
         
     def _draw_line(self, line: elements.geometry.Line):
         x, y = line.start_position
@@ -94,4 +106,5 @@ if __name__ == "__main__":
     #viewer1 = XodrViewer("./xodr/curve_r100.xodr")
     viewer1 = XodrViewer("./xodr/multi_intersections.xodr")
     #viewer1 = XodrViewer("./xodr/jolengatan.xodr")
-    viewer1.draw_lane()
+    viewer1.show_geometry()
+
