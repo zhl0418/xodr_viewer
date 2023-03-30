@@ -1,0 +1,69 @@
+import numpy as np
+from shapely.geometry import LineString, Point
+import matplotlib.pyplot as plt
+from shapely.ops import nearest_points
+
+
+def lane_width_function(x, coeffs):
+    return np.polyval(coeffs, x)
+
+
+def create_lane_line(reference_points, lane_width_coeffs, side="left"):
+    reference_line = LineString(reference_points)
+    points = []
+    for x, y in reference_points:
+        distance = lane_width_function(x, lane_width_coeffs)
+        point = reference_line.interpolate(reference_line.project(Point(x, y)))
+        """_summary_
+        point.buffer(distance)
+        This creates a buffer (circle) around the point on the reference line with
+        a radius equal to the lane width (distance) at the current x position
+        nearest_points(...): This function finds the pair of nearest points between
+        the two geometric objects (in this case, the buffer around the point on the
+        reference line and the parallel offset line). It returns a tuple containing 
+        two points: one from each input object. We are interested in the point on the
+        parallel offset line, which is the second element of the tuple (index 1).
+        """
+        offset_point = nearest_points(
+            point.buffer(distance), reference_line.parallel_offset(distance, side)
+        )[1]
+        points.append((offset_point.x, offset_point.y))
+    return LineString(points)
+
+
+def plot_lines(reference_points, left_lane_line, right_lane_line):
+    plt.figure()
+
+    plt.plot(
+        reference_points[:, 0], reference_points[:, 1], "b", label="Reference Line"
+    )
+
+    left_lane_points = np.array(left_lane_line.coords)
+    plt.plot(
+        left_lane_points[:, 0], left_lane_points[:, 1], "r", label="Left Lane Line"
+    )
+
+    right_lane_points = np.array(right_lane_line.coords)
+    plt.plot(
+        right_lane_points[:, 0], right_lane_points[:, 1], "g", label="Right Lane Line"
+    )
+
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.legend()
+    plt.show()
+
+
+a, b, c = 0.1, 0, 0
+x = np.linspace(-10, 10, num=100)
+y = a * x**2 + b * x + c
+reference_points = np.column_stack((x, y))
+# reference_points = np.array([[0, 0], [1, 0], [2, 0], [3, 0]])
+
+# Define a polynomial lane width function
+lane_width_coeffs = [0.1, 2]  # y = 2
+
+left_lane_line = create_lane_line(reference_points, lane_width_coeffs, side="left")
+right_lane_line = create_lane_line(reference_points, lane_width_coeffs, side="right")
+
+plot_lines(reference_points, left_lane_line, right_lane_line)
