@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import elements
 from math import cos, sin, radians
 import numpy as np
+from viewer.draw_lane import DrawLaneSection
 
 
 class XodrViewer:
@@ -24,8 +25,7 @@ class XodrViewer:
     def draw_lane(self):
         for road in self.xodr.roads:
             for lanesection in road.lanes.lane_sections: 
-                for lane in lanesection.leftLanes:
-                    print(lane.id)
+                DrawLaneSection(lanesection)
                     
     def draw_geometry_color(self):
         for road in self.xodr.roads:
@@ -102,9 +102,9 @@ class XodrViewer:
 
 
 if __name__ == "__main__":
-    #viewer1 = XodrViewer("./xodr/straight_500m.xodr")
+    viewer1 = XodrViewer("./xodr/straight_500m.xodr")
     #viewer1 = XodrViewer("./xodr/curve_r100.xodr")
-    viewer1 = XodrViewer("./xodr/multi_intersections.xodr")
+    #viewer1 = XodrViewer("./xodr/multi_intersections.xodr")
     #viewer1 = XodrViewer("./xodr/jolengatan.xodr")
-    viewer1.show_geometry()
+    viewer1.draw_lane()
 
