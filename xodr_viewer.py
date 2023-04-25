@@ -25,7 +25,8 @@ class XodrViewer:
     def draw_lane(self):
         for road in self.xodr.roads:
             for lanesection in road.lanes.lane_sections: 
-                DrawLaneSection(lanesection)
+                DrawLaneSection(lanesection).Draw()
+
                     
     def draw_geometry_color(self):
         for road in self.xodr.roads:
@@ -102,7 +103,7 @@ class XodrViewer:
 
 
 if __name__ == "__main__":
-    viewer1 = XodrViewer("./xodr/straight_500m.xodr")
+    viewer1 = XodrViewer("./xodr/examples/Ex_Lane-Width/Ex_Lane-Width.xodr")
     #viewer1 = XodrViewer("./xodr/curve_r100.xodr")
     #viewer1 = XodrViewer("./xodr/multi_intersections.xodr")
     #viewer1 = XodrViewer("./xodr/jolengatan.xodr")

@@ -249,6 +249,11 @@ class LaneSection:
         self._parentRoad = road
 
     @property
+    def s0(self):
+        """s-coordinate of start position """
+        return self.sPos
+        
+    @property
     def singleSide(self):
         """Indicator if lane section entry is valid for one side only."""
         return self._singleSide
@@ -299,6 +304,21 @@ class LaneSection:
     def parentRoad(self):
         """ """
         return self._parentRoad
+
+    def predecessor(self):
+        """ """
+        for ls in self._parentRoad.lanes.lane_sections:
+            if ls.idx == self.idx - 1:
+                return ls
+        return None
+    
+    def successor(self):
+        """ """
+        for ls in self._parentRoad.lanes.lane_sections:
+            if ls.idx == self.idx + 1:
+                return ls
+        return None
+    
 
 
 class LaneWidth(RoadRecord):
